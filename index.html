@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Vega-Lite Bar Chart</title>
+<head>
+    <title>FIT3179: Week 10 Homework</title>
     <meta charset="utf-8" />
 
     <script src="https://cdn.jsdelivr.net/npm/vega@5.17.0"></script>
@@ -9,23 +9,144 @@
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.12.2"></script>
 
     <style media="screen">
-      /* Add space between Vega-Embed links  */
-      .vega-actions a {
-        margin-right: 5px;
-      }
+        /* Add space between Vega-Embed links  */
+        .vega-actions a {
+            margin-right: 5px;
+        }
     </style>
-  </head>
-  <body>
-    <h1>Template for Embedding Vega-Lite Visualization</h1>
-    <!-- Container for the visualization -->
-    <div id="vis"></div>
 
-    <script>
-      // Assign the specification to a local variable vlSpec.
-      var vlSpec = "https://jupindergrewal.github.io/FIT3179/visualization.vl(2).json"
 
-      // Embed the visualization in the container with id `vis`
-      vegaEmbed('#vis', vlSpec);
-    </script>
-  </body>
+</head>
+<body>
+<h1>Global Access to Telecommunications & The Internet</h1>
+<h3>Homework Week 10</h3>
+<h4>Jupinder Grewal (28755960)</h4>
+<!-- Container for the visualization -->
+
+<div id="vis2"></div>
+<div id="vis1"></div>
+
+
+
+<script>
+const datasetURL="https://raw.githubusercontent.com/JupinderGrewal/FIT3179/main/transformedData.csv"
+
+    const vlSpec1 = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+        "title": "Total Number of Fixed Telephone Subscriptions (2017)",
+        "width": 500,
+        "height": 200,
+        "data": {
+            "url": datasetURL
+        },
+        "transform": [
+            {"filter": {"field": "Time", "equal": 2017}},
+            {"filter": {"field": "Fixed telephone subscriptions", "gt": 0}}
+        ],
+        "mark": "bar",
+        "encoding": {
+            "x":
+                {
+                    "field": "Fixed telephone subscriptions",
+                    "type": "quantitative",
+                    "title": "Fixed telephone subscriptions",
+                    "axis": {"tickCount": 5}
+                },
+            "y": {
+                "field": "Region",
+                "type": "nominal",
+                "sort": "-y"
+            },
+            "color": {"field": "Region", "type": "nominal"},
+            "tooltip": [
+                {"field": "Fixed telephone subscriptions", "type": "quantitative", "title": "Total Subscriptions"}
+            ]
+        }
+
+    }
+
+
+    const vlSpec2= {
+        "$schema":"https://vega.github.io/schema/vega-lite/v4.json",
+        "title":"Comparing Mobile plans vs Fixed Broadband",
+        "width":500,
+        "height":500,
+        "data": {
+            "url":datasetURL
+        },
+        "transform": [
+            {"filter": {"field": "Time", "equal": 2017}},
+            {"filter": {"field": "Mobile cellular subscriptions (per 100 people)", "gt": 0}},
+            {"filter": {"field": "Fixed broadband subscriptions (per 100 people)","gt": 0}},
+            {"filter": "Continent_Selection == null || datum.Continent == Continent_Selection"}
+        ],
+        "mark": "circle",
+        "params": [
+            {
+                "name": "Continent_Selection",
+                "bind": {
+                    "input": "select",
+                    "options": [
+                        null,
+                        "Africa",
+                        "Americas",
+                        "Asia",
+                        "Europe",
+                        "Oceania"
+                    ],
+                    "labels": [
+                        "All",
+                        "Africa",
+                        "Americas",
+                        "Asia",
+                        "Europe",
+                        "Oceania"
+                    ],
+                    "name": "Select Continent"
+                }
+            }
+        ],
+        "encoding": {
+            "y": {
+                "field": "Mobile cellular subscriptions (per 100 people)",
+                "type": "quantitative",
+                "scale": {"type": "linear"},
+                "axis": {"tickCount": 8},
+                "title": "Mobile Plans (per 100 people)"
+            },
+            "x":{
+                "field": "Fixed broadband subscriptions (per 100 people)",
+                "type":"quantitative",
+                "scale": {"type": "log"},
+                "axis": {"tickCount": 4},
+                "title": "Broadband Plans (per 100 people)"
+            },
+            "color": {"field": "Continent", "type": "nominal"},
+            "size": {
+                "field": "Population, total",
+                "type": "quantitative",
+                "scale":{
+                    "type": "threshold",
+                    "domain": [1e6,1e7,5e7,1e8,5e8],
+                    "range": [10, 50, 150, 200, 300, 400]
+                },
+                "legend": {"format": ".1s", "title": "Population"}
+            },
+            "opacity": {"value": 0.6},
+            "tooltip": [
+                {"field": "Country", "type": "nominal"},
+                {"field": "Mobile cellular subscriptions (per 100 people)", "type": "quantitative", "title": "Mobile Cell Subscriptsions"},
+                {"field": "Fixed broadband subscriptions (per 100 people)", "type": "quantitative", "title": "Broadband Subscriptsions"},
+                {"field": "Population, total", "type":"quantitative"}
+            ]
+        }
+
+    }
+
+
+    // Embed the visualization in the container with id `vis`
+    vegaEmbed('#vis1', vlSpec1);
+    vegaEmbed('#vis2', vlSpec2);
+</script>
+</body>
 </html>
